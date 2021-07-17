@@ -54,5 +54,22 @@ class BaseController extends Controller
 		// Preload any models, libraries, etc, here.
 		//--------------------------------------------------------------------
 		// E.g.: $this->session = \Config\Services::session();
+
+        // jsonデータプロセスからpost
+        $this->jsonToPost();
 	}
+
+	public function jsonToPost(){
+        $request = $this->request;
+        $contentType = $request->header('Content-Type');
+
+        if(str_contains($contentType, 'application/json')){
+            $body = file_get_contents("php://input");
+            $data = json_decode($body, true);
+
+            if( !($data === false || $data === null) )
+                foreach ($data as $key=>$val)
+                    $_POST[$key] = $_REQUEST[$key] = $val;
+        }
+    }
 }
