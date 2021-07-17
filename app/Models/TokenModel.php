@@ -18,6 +18,7 @@ class TokenModel extends BaseModel
      * @return string
      */
     public function generateToken(Int $user_id=0): string {
+        helper('uuid');
         return sha1(uuidGenerator('new_token', time(), $user_id));
     }
 
@@ -41,9 +42,12 @@ class TokenModel extends BaseModel
      * @param string $token
      * @return array|object|null
      */
-    public function getToken(String $token=''): object|array|null
+    public function getToken(String|Int $token=''): object|array|null
     {
-        if($result = $this->where('token', $token)->first())
+        if(gettype($token)==='string') $request = $this->where('token', $token)->first();
+        else $request = $this->where('id', $token)->first();
+
+        if($result = $request)
             return $result;
         else
             return null;
