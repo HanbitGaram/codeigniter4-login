@@ -59,7 +59,7 @@ class TokenModel extends BaseModel
      */
     public function validateToken(String $token=''): bool {
         if($result = $this->getToken($token)){
-            if($result->exp > time()) return false;
+            if($result->exp < time()) return false;
             else true;
         }else{
             return false;
